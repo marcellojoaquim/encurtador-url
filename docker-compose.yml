@@ -1,0 +1,12 @@
+services:
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra-node1
+    restart: always
+    ports:
+      - "9042:9042"
+      - "7000:7000"
+    environment:
+      - CASSANDRA_BROADCAST_ADDRESS=cassandra-node1
+    volumes:
+      - cassandra_data:/var/lib/cassandra
