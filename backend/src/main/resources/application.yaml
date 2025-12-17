@@ -1,3 +1,15 @@
 spring:
   application:
     name: UrlShortener
+
+  cassandra:
+    contact-points:
+      - 172.21.0.2:9042
+    local-datacenter: datacenter1
+    connection:
+      connect-timeout: 10s
+      init-query-timeout: 10s
+  data:
+    cassandra:
+      keyspace-name: encurtador_url
+      schema-action: create_if_not_exists
