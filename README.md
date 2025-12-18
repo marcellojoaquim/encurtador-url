@@ -16,6 +16,12 @@ __________________________________________________________________________
 - Alta disponibilidade
 - Cada hash deverá ser único para cada URL
 
+## Como rodar o projeto
+__________________________________________________________________________
+- Clone o projeto: TODO
+- Na raiz do projeto rode o comando docker: TODO
+- No diretório do projeto backend execute: mvn spring-boot:run
+- Acesso a documentação do Swagger: TODO
 
 ## Tecnologias Utilizadas
 __________________________________________________________________________
