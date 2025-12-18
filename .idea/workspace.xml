@@ -7,7 +7,6 @@
     <list default="true" id="a2467b0e-4300-4f40-9ac5-5049279f70de" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/url_shortener/config/CassandraConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/url_shortener/config/CassandraConfig.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
