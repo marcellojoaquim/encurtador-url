@@ -1,12 +1,29 @@
 services:
-  cassandra:
-    image: cassandra:latest
-    container_name: cassandra-node1
+#  cassandra:
+#    image: cassandra:latest
+#    container_name: cassandra-node1
+#    restart: always
+#    ports:
+#      - "9042:9042"
+#      - "7000:7000"
+#    environment:
+#      - CASSANDRA_BROADCAST_ADDRESS=cassandra-node1
+#    volumes:
+#      - cassandra_data:/var/lib/cassandra
+  postgresdb:
+    image: postgres:15-alpine
+    container_name: postgres-container
     restart: always
     ports:
-      - "9042:9042"
-      - "7000:7000"
+      - "5432:5432"
     environment:
-      - CASSANDRA_BROADCAST_ADDRESS=cassandra-node1
-    volumes:
-      - cassandra_data:/var/lib/cassandra
+      POSTGRES_DB: url-encurter
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+  redis:
+    image: redis:latest
+    container_name: meu-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
