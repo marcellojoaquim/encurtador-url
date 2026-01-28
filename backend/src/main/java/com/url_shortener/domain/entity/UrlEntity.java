@@ -17,13 +17,14 @@ import java.time.Instant;
 public class UrlEntity {
 
     @Id()
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "url_seq")
+    @SequenceGenerator(name = "url_seq", sequenceName = "seq_url", initialValue = 10000)
+    private Long id;
 
-    @Column(name = "short_code")
+    @Column(name = "short_code", unique = true)
     private String shortCode;
 
-    @Column(name = "original_url")
+    @Column(name = "original_url", unique = true)
     private String originalUrl;
 
     @Column(name = "created_at")
