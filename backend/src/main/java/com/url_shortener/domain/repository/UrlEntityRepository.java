@@ -4,8 +4,10 @@ import com.url_shortener.domain.entity.UrlEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.UUID;
+
 @Repository
-public interface UrlEntityRepository extends JpaRepository<UrlEntity, Long> {
+public interface UrlEntityRepository extends JpaRepository<UrlEntity, UUID> {
 
     UrlEntity findByShortCode(String shortCode);
 }
