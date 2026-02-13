@@ -17,7 +17,7 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: url-encurter
+      POSTGRES_DB: url-shortener
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
   redis:

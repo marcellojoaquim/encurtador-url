@@ -21,7 +21,7 @@ public class UrlEntity {
     @SequenceGenerator(name = "url_seq", sequenceName = "seq_url", initialValue = 10000)
     private Long id;
 
-    @Column(name = "short_code", unique = true)
+    @Column(name = "short_code")
     private String shortCode;
 
     @Column(name = "original_url", unique = true)
