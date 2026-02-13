@@ -23,7 +23,7 @@ public class UrlEntity {
     private String shortCode;
 
     @NotNull
-    @Column(name = "original_url", unique = true)
+    @Column(name = "original_url", unique = true, columnDefinition = "text")
     private String originalUrl;
 
     @NotNull
