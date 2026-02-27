@@ -9,5 +9,5 @@ import lombok.Data;
 public class UrlEntityRequest {
 
     @NotNull
-    private String url;
+    private String originalUrl;
 }

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class Base62ServiceImpl implements Base62Service {
 
     @Autowired
-    private Base62 base62 = Base62.createInstanceWithGmpCharacterSet();
+    private Base62 base62 = Base62.createInstanceWithInvertedCharacterSet();
 
     @Override
     public String encode(String code) {
