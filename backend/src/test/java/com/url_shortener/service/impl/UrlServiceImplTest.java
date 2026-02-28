@@ -1,6 +1,7 @@
 package com.url_shortener.service.impl;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
@@ -20,6 +21,7 @@ import org.mockito.Spy;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -70,7 +72,17 @@ class UrlServiceImplTest {
     }
 
     @Test
+    @DisplayName("Deve retornar urlEntity via shortcode")
     void findByShortCode() {
+        var shortCode = "qwerty123qwe";
+        when(urlEntityRepository.findByShortCode(anyString())).thenReturn(Optional.of(urlEntity));
+        Optional<UrlEntity> result = urlService.findByShortCode(shortCode);
+
+        Mockito.verify(urlEntityRepository, times(1)).findByShortCode(shortCode);
+        assertEquals(result.orElseThrow().getUuid(), urlEntity.getUuid());
+        assertEquals(result.orElseThrow().getOriginalUrl(), urlEntity.getOriginalUrl());
+        assertEquals(result.orElseThrow().getCreatedAt(), urlEntity.getCreatedAt());
+        assertNull(result.orElseThrow().getUpdatedAt());
     }
 
     @Test

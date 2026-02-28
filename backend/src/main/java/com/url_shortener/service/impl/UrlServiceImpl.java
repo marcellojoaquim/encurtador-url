@@ -24,16 +24,14 @@ public class UrlServiceImpl implements IUrlService {
     private final ModelMapper modelMapper;
     private final Base62Service base62Service;
     private final UrlEntityRepository urlEntityRepository;
-    private final ShortCodeUtils shortCodeUtils;
 
     public UrlServiceImpl(UrlEntityRepository urlEntityRepository,
                           ModelMapper modelMapper,
-                          Base62Service base62Service,
-                          ShortCodeUtils shortCodeUtils) {
+                          Base62Service base62Service)
+    {
         this.modelMapper = modelMapper;
         this.base62Service = base62Service;
         this.urlEntityRepository = urlEntityRepository;
-        this.shortCodeUtils = shortCodeUtils;
     }
 
     @Override
