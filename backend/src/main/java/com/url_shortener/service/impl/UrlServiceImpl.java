@@ -2,6 +2,7 @@ package com.url_shortener.service.impl;
 
 import com.url_shortener.domain.entity.UrlEntity;
 import com.url_shortener.domain.repository.UrlEntityRepository;
+import com.url_shortener.domain.utils.ShortCodeUtils;
 import com.url_shortener.excetion.BusinessException;
 import com.url_shortener.rest.dto.PageResponse;
 import com.url_shortener.rest.dto.UrlEntityResponse;
@@ -23,11 +24,16 @@ public class UrlServiceImpl implements IUrlService {
     private final ModelMapper modelMapper;
     private final Base62Service base62Service;
     private final UrlEntityRepository urlEntityRepository;
+    private final ShortCodeUtils shortCodeUtils;
 
-    public UrlServiceImpl(UrlEntityRepository urlEntityRepository, ModelMapper modelMapper, Base62Service base62Service) {
+    public UrlServiceImpl(UrlEntityRepository urlEntityRepository,
+                          ModelMapper modelMapper,
+                          Base62Service base62Service,
+                          ShortCodeUtils shortCodeUtils) {
         this.modelMapper = modelMapper;
         this.base62Service = base62Service;
         this.urlEntityRepository = urlEntityRepository;
+        this.shortCodeUtils = shortCodeUtils;
     }
 
     @Override
@@ -37,7 +43,7 @@ public class UrlServiceImpl implements IUrlService {
         }
 
         final UUID VAR_UUID = java.util.UUID.randomUUID();
-        var code = getSubString(VAR_UUID.toString());
+        var code = ShortCodeUtils.generateFromUuid(VAR_UUID.toString());
         var encoded = base62Service.encode(code);
 
         urlEntity.setShortCode(encoded);
@@ -66,15 +72,5 @@ public class UrlServiceImpl implements IUrlService {
                 page.getTotalPages(),
                 page.isLast()
         );
-    }
-
-
-    private static String getSubString(String uuid){
-
-        StringBuilder sb = new StringBuilder();
-        for(int i=0; i<8;i++){
-            sb.append(uuid.charAt(i));
-        }
-        return sb.toString();
     }
 }
