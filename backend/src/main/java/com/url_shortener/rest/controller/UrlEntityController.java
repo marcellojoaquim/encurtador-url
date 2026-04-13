@@ -15,6 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.net.URI;
+import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/url")
@@ -50,9 +53,14 @@ public class UrlEntityController {
         return ResponseEntity.ok(urlService.findAll(pageable));
     }
 
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public String testeGet() {
-        return "valido";
+    @GetMapping("{code}")
+    @ResponseStatus(HttpStatus.FOUND)
+    public ResponseEntity<Void> redirect(@PathVariable("code") String code) {
+        Optional<UrlEntity> originalUrl = Optional.of(urlService.findByShortCode(code)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .location(URI.create(originalUrl.get().getOriginalUrl()))
+                .build();
     }
 }
