@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import com.url_shortener.domain.entity.UrlEntity;
 import com.url_shortener.domain.repository.UrlEntityRepository;
 import com.url_shortener.domain.utils.ShortCodeUtils;
+import com.url_shortener.rest.dto.PageResponse;
 import com.url_shortener.rest.dto.UrlEntityRequest;
 import com.url_shortener.rest.dto.UrlEntityResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,10 +19,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.*;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,6 +41,15 @@ class UrlServiceImplTest {
 
     @Mock
     UrlEntityRepository urlEntityRepository;
+
+    @Mock
+    Pageable pageable;
+
+    @Mock
+    PageRequest pageRequest;
+
+    @Mock
+    ModelMapper modelMapper;
 
     @Spy
     Base62ServiceImpl base62Service;
@@ -59,6 +73,7 @@ class UrlServiceImplTest {
         urlEntity.setUpdatedAt(null);
         urlEntity.setOriginalUrl(urlRequest.getOriginalUrl());
         urlEntity.setShortCode(encoded);
+        pageRequest = PageRequest.of(1, 1, Sort.by("id"));
     }
 
     @Test
@@ -89,5 +104,15 @@ class UrlServiceImplTest {
 
     @Test
     void findAll() {
+        pageable = pageRequest;
+        List<UrlEntity> list = List.of(urlEntity);
+        Page<UrlEntity> page = new PageImpl<>(list, pageable, list.size());
+
+        when(urlEntityRepository.findAll(any(Pageable.class))).thenReturn(page);
+
+        PageResponse<UrlEntityResponse> allUrls = urlService.findAll(pageable);
+
+        assertFalse(allUrls.content().isEmpty());
+        assertEquals(1, allUrls.content().size());
     }
 }
