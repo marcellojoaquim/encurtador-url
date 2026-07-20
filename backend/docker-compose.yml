@@ -10,3 +10,5 @@ services:
       - CASSANDRA_BROADCAST_ADDRESS=cassandra-node1
     volumes:
       - cassandra_data:/var/lib/cassandra
+volumes:
+  cassandra_data:
