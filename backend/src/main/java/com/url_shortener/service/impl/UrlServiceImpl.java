@@ -49,7 +49,7 @@ public class UrlServiceImpl implements UrlService {
 
     @Override
     public Optional<UrlEntity> findByShortCode(String code) {
-        return urlEntityRepository.findByShortCode(code);
+        return urlEntityRepository.findById(code);
     }
 
 }

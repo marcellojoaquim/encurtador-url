@@ -1,7 +1,5 @@
 package com.url_shortener.domain.utils;
 
-import java.util.UUID;
-
 public class ShortCodeUtils {
 
     private ShortCodeUtils() {

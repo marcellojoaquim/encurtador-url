@@ -5,15 +5,9 @@ import org.springframework.data.cassandra.repository.CassandraRepository;
 import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-import java.util.UUID;
-
 @Repository
 @EnableCassandraRepositories
-public interface UrlEntityRepository extends CassandraRepository<UrlEntity, UUID> {
-
-    Optional<UrlEntity> findByShortCode(String shortCode);
-    boolean existsByShortCode(String shortCode);
+public interface UrlEntityRepository extends CassandraRepository<UrlEntity, String> {
     boolean existsByOriginalUrl(String url);
 
 }
