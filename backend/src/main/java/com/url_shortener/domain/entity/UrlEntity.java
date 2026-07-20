@@ -1,9 +1,13 @@
 package com.url_shortener.domain.entity;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import lombok.*;
 
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.cassandra.core.mapping.Column;
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -11,26 +15,25 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "urls")
-@Entity
+@Table("urls")
 public class UrlEntity {
 
-    @Id()
+    @Column("id")
     private UUID uuid;
 
-    @NotNull
-    @Column(name = "short_code")
+    @PrimaryKey
+    @Column("short_code")
     private String shortCode;
 
     @NotNull
-    @Column(name = "original_url", unique = true, columnDefinition = "text")
+    @Column("original_url")
     private String originalUrl;
 
     @NotNull
-    @Column(name = "created_at")
+    @Column("created_at")
     private Instant createdAt;
 
-    @Column(name = "updated_at")
+    @Column("updated_at")
     private Instant updatedAt;
 
     public UrlEntity(UUID uuid, String shortCode, String originalUrl, Instant createdAt, Instant updatedAt) {

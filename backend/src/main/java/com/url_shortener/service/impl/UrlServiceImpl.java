@@ -4,22 +4,17 @@ import com.url_shortener.domain.entity.UrlEntity;
 import com.url_shortener.domain.repository.UrlEntityRepository;
 import com.url_shortener.domain.utils.ShortCodeUtils;
 import com.url_shortener.excetion.BusinessException;
-import com.url_shortener.rest.dto.PageResponse;
-import com.url_shortener.rest.dto.UrlEntityResponse;
 import com.url_shortener.service.Base62Service;
-import com.url_shortener.service.IUrlService;
+import com.url_shortener.service.UrlService;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class UrlServiceImpl implements IUrlService {
+public class UrlServiceImpl implements UrlService {
 
     private final ModelMapper modelMapper;
     private final Base62Service base62Service;
@@ -57,18 +52,4 @@ public class UrlServiceImpl implements IUrlService {
         return urlEntityRepository.findByShortCode(code);
     }
 
-    @Override
-    public PageResponse<UrlEntityResponse> findAll(Pageable pageable) {
-        Page<UrlEntity> page = urlEntityRepository.findAll(pageable);
-
-        List<UrlEntityResponse> content = page.getContent().stream()
-                .map(urlEntity -> modelMapper.map(urlEntity, UrlEntityResponse.class)).toList();
-        return new PageResponse<>(
-                content,
-                page.getNumber(),
-                page.getTotalElements(),
-                page.getTotalPages(),
-                page.isLast()
-        );
-    }
 }

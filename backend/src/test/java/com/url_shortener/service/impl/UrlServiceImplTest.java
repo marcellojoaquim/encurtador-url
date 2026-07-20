@@ -102,17 +102,4 @@ class UrlServiceImplTest {
         assertNull(result.orElseThrow().getUpdatedAt());
     }
 
-    @Test
-    void findAll() {
-        pageable = pageRequest;
-        List<UrlEntity> list = List.of(urlEntity);
-        Page<UrlEntity> page = new PageImpl<>(list, pageable, list.size());
-
-        when(urlEntityRepository.findAll(any(Pageable.class))).thenReturn(page);
-
-        PageResponse<UrlEntityResponse> allUrls = urlService.findAll(pageable);
-
-        assertFalse(allUrls.content().isEmpty());
-        assertEquals(1, allUrls.content().size());
-    }
 }
