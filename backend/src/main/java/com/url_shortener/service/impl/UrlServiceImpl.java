@@ -7,6 +7,7 @@ import com.url_shortener.excetion.BusinessException;
 import com.url_shortener.service.Base62Service;
 import com.url_shortener.service.UrlService;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -48,6 +49,7 @@ public class UrlServiceImpl implements UrlService {
     }
 
     @Override
+    @Cacheable(value = "codeUrl", key = "#code")
     public Optional<UrlEntity> findByShortCode(String code) {
         return urlEntityRepository.findById(code);
     }

@@ -4,6 +4,8 @@ import com.url_shortener.domain.entity.UrlEntity;
 import com.url_shortener.rest.dto.UrlEntityRequest;
 import com.url_shortener.rest.dto.UrlEntityResponse;
 import com.url_shortener.service.UrlService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -14,7 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.net.URI;
 import java.util.Optional;
 
-
+@Tag(name = "URLs", description = "Endpoints de gerenciamento e criação de URLs encurtadas")
 @RestController
 @RequestMapping("/url")
 public class UrlEntityController {
@@ -27,6 +29,7 @@ public class UrlEntityController {
         this.modelMapper = modelMapper;
     }
 
+    @Operation(summary = "Encurta uma URL", description = "Recebe uma URL original e retorna o código encurtado")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UrlEntityResponse save(@RequestBody @Valid UrlEntityRequest urlEntityRequest) {
@@ -35,6 +38,7 @@ public class UrlEntityController {
         return modelMapper.map(url, UrlEntityResponse.class);
     }
 
+    @Operation(summary = "Retorna uma url original baseado na encurtada", description = "Recebe uma URL encurtada e retorna a URL original correspondente")
     @GetMapping("find/{code}")
     @ResponseStatus(HttpStatus.OK)
     public UrlEntityResponse findByShortCode(@PathVariable String code) {
@@ -43,12 +47,7 @@ public class UrlEntityController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-//    @GetMapping("/find")
-//    public ResponseEntity<PageResponse<UrlEntityResponse>> findAll(
-//            @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-//        return ResponseEntity.ok(urlService.findAll(pageable));
-//    }
-
+    @Operation(summary = "Redireciona para a URL original", description = "Recebe via parametro a URL encurtada e redireciona para a URL original.")
     @GetMapping("{code}")
     @ResponseStatus(HttpStatus.FOUND)
     public ResponseEntity<Void> redirect(@PathVariable("code") String code) {
