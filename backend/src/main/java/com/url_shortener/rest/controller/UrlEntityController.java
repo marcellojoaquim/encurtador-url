@@ -58,4 +58,13 @@ public class UrlEntityController {
                 .location(URI.create(originalUrl.get().getOriginalUrl()))
                 .build();
     }
+
+    @Operation(summary = "Deleta uma url pela url encurtada", description = "Recebe uma url encurtada e deleta o objeto da base de dados")
+    @DeleteMapping("{code}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> deleteUrl(@PathVariable("code") String code) {
+        var url = urlService.findByShortCode(code).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        urlService.delete(url);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

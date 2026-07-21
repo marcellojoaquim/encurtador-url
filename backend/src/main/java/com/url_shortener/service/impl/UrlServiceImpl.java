@@ -7,6 +7,7 @@ import com.url_shortener.excetion.BusinessException;
 import com.url_shortener.service.Base62Service;
 import com.url_shortener.service.UrlService;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -49,9 +50,22 @@ public class UrlServiceImpl implements UrlService {
     }
 
     @Override
-    @Cacheable(value = "codeUrl", key = "#code")
+    @Cacheable(
+            value = "codeUrl",
+            key = "#code",
+            unless = "#result == null"
+    )
     public Optional<UrlEntity> findByShortCode(String code) {
         return urlEntityRepository.findById(code);
+    }
+
+    @Override
+    @CacheEvict(value = "codeUrl", key = "#url.shortCode")
+    public void delete(UrlEntity url) {
+        if(url == null || url.getShortCode() == null) {
+            throw new IllegalArgumentException("Url ou Shortcode não podem ser nulos");
+        }
+        urlEntityRepository.delete(url);
     }
 
 }
