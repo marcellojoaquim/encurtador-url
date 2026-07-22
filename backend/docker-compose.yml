@@ -1,25 +1,37 @@
 services:
-#  cassandra:
-#    image: cassandra:latest
-#    container_name: cassandra-node1
-#    restart: always
-#    ports:
-#      - "9042:9042"
-#      - "7000:7000"
-#    environment:
-#      - CASSANDRA_BROADCAST_ADDRESS=cassandra-node1
-#    volumes:
-#      - cassandra_data:/var/lib/cassandra
-  postgresdb:
-    image: postgres:15-alpine
-    container_name: postgres-container
+  cassandra:
+    image: cassandra:4.1
+    container_name: cassandra-node1
     restart: always
     ports:
-      - "5432:5432"
+      - "9042:9042"
+      - "7000:7000"
     environment:
-      POSTGRES_DB: url-shortener
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      - CASSANDRA_BROADCAST_ADDRESS=cassandra-node1
+      - MAX_HEAP_SIZE=512M
+      - HEAP_NEWSIZE=100M
+    volumes:
+      - cassandra_data:/var/lib/cassandra
+
+  cassandra-init:
+    image: cassandra:4.1
+    container_name: cassandra-init
+    depends_on:
+      - cassandra
+    volumes:
+      - ./db/schema.cql:/schema.cql:ro
+    entrypoint: >
+      sh -c "
+      echo 'Aguardando Cassandra iniciar...';
+      sleep 40;
+      echo 'Executando schema...';
+      until cqlsh cassandra-node1 9042 -f /schema.cql; do
+        echo 'Cassandra ainda não está pronto, tentando novamente em 10 segundos...';
+        sleep 10;
+      done;
+      echo 'Schema criado com sucesso!';
+      "
+
   redis:
     image: redis:latest
     container_name: meu-redis
@@ -27,3 +39,6 @@ services:
     ports:
       - "6379:6379"
     command: redis-server --appendonly yes
+
+volumes:
+  cassandra_data:

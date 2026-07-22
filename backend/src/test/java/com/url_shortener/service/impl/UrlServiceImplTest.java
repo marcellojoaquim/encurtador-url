@@ -1,14 +1,8 @@
 package com.url_shortener.service.impl;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
-
 import com.url_shortener.domain.entity.UrlEntity;
 import com.url_shortener.domain.repository.UrlEntityRepository;
 import com.url_shortener.domain.utils.ShortCodeUtils;
-import com.url_shortener.rest.dto.PageResponse;
 import com.url_shortener.rest.dto.UrlEntityRequest;
 import com.url_shortener.rest.dto.UrlEntityResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,21 +13,22 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.*;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
-@ActiveProfiles("test")
+@ExtendWith(MockitoExtension.class)
 class UrlServiceImplTest {
 
     @InjectMocks
@@ -73,7 +68,6 @@ class UrlServiceImplTest {
         urlEntity.setUpdatedAt(null);
         urlEntity.setOriginalUrl(urlRequest.getOriginalUrl());
         urlEntity.setShortCode(encoded);
-        pageRequest = PageRequest.of(1, 1, Sort.by("id"));
     }
 
     @Test
@@ -92,27 +86,14 @@ class UrlServiceImplTest {
     @DisplayName("Deve retornar urlEntity via shortcode")
     void findByShortCode() {
         var shortCode = "qwerty123qwe";
-        when(urlEntityRepository.findByShortCode(anyString())).thenReturn(Optional.of(urlEntity));
+        when(urlEntityRepository.findById(anyString())).thenReturn(Optional.of(urlEntity));
         Optional<UrlEntity> result = urlService.findByShortCode(shortCode);
 
-        Mockito.verify(urlEntityRepository, times(1)).findByShortCode(shortCode);
+        Mockito.verify(urlEntityRepository, times(1)).findById(shortCode);
         assertEquals(result.orElseThrow().getUuid(), urlEntity.getUuid());
         assertEquals(result.orElseThrow().getOriginalUrl(), urlEntity.getOriginalUrl());
         assertEquals(result.orElseThrow().getCreatedAt(), urlEntity.getCreatedAt());
         assertNull(result.orElseThrow().getUpdatedAt());
     }
 
-    @Test
-    void findAll() {
-        pageable = pageRequest;
-        List<UrlEntity> list = List.of(urlEntity);
-        Page<UrlEntity> page = new PageImpl<>(list, pageable, list.size());
-
-        when(urlEntityRepository.findAll(any(Pageable.class))).thenReturn(page);
-
-        PageResponse<UrlEntityResponse> allUrls = urlService.findAll(pageable);
-
-        assertFalse(allUrls.content().isEmpty());
-        assertEquals(1, allUrls.content().size());
-    }
 }
